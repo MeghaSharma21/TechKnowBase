@@ -1,0 +1,131 @@
+ public static void main(String[] argv) throws Exception {    
+   // System.out.println("Enter an English word in plural form and press ENTER");
+	  BufferedReader br=new BufferedReader(new FileReader("C:\\Users\\Megha Sharma\\Downloads\\fromServer\\PagesOnlyTechnical"));
+	  BufferedReader br1=new BufferedReader(new FileReader("C:\\Users\\Megha Sharma\\Downloads\\pageCategoriesForTechnicalConcepts"));
+	  File file = new File("C:\\Users\\Megha Sharma\\Desktop\\Relation3");
+      file.createNewFile();
+      BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+	  HashMap<String,List<String>> hs = new HashMap<String,List<String>>();
+	 
+	  String line,line1,a;
+  	List<String> list= new ArrayList<String>();
+    List<String> TConcepts = new ArrayList<String>();
+    while((line=br.readLine())!=null)
+    {	line=line.toLowerCase();
+    line=line.replaceAll("_", " ");
+    	TConcepts.add(line);
+    }
+  	
+    line1=br1.readLine();
+  	line1=line1.toLowerCase();
+	line1=line1.replaceAll("_", " ");
+  	
+  	int x=line1.indexOf("\t");
+
+	a=line1.substring(0,x);
+      while(line1!=null)
+      {	  line1=line1.toLowerCase();
+    	line1=line1.replaceAll("_", " ");
+    	x = line1.indexOf("\t");
+    	//System.out.println("line: "+line1+"\n");
+    	if(x!=-1)
+    	if(a.equalsIgnoreCase(line1.substring(0,x)))
+    	{	if(TConcepts.contains(line1.substring(x+1)))
+        	list.add(line1.substring(x+1));
+	 // 	System.out.println(line1.substring(x+1)+"  "+TConcepts.contains(line1.substring(x+1)));
+
+    	//System.out.println("33 "+a );
+
+    	}
+    	else
+    	{	/*for(String w:list)
+		{
+    		System.out.println("Before hs: "+w+"  ");
+
+		} */
+    		hs.put(a,list);
+    	/*System.out.print("1  "+a+"  ");
+    		
+    		for(String w:list)
+    		{
+        		System.out.println(w+"  ");
+
+    		} */
+    	  	list= new ArrayList<String>();
+    	  	//System.out.println(line1.substring(x+1)+"  "+TConcepts.contains(line1.substring(x+1)));
+    	  	if(TConcepts.contains(line1.substring(x+1)))
+    		list.add(line1.substring(x+1));
+    	}
+    	if(x!=-1)
+    	a=line1.substring(0,x);
+    	/*System.out.print("After: "+a+"  ");
+		
+		for(String w:list)
+		{
+    		System.out.println(w+"  ");
+
+		}*/
+    	line1=br1.readLine();
+
+    	/*Set set = mp.entrySet();              
+        Iterator i = set.iterator(); 
+
+        while (i.hasNext()) { 
+            Map.Entry me = (Map.Entry) i.next(); 
+            list = (List) mp.get(me.getKey());
+
+    	*/
+      }
+      /*for(String w:hs.keySet())
+      {
+    	System.out.print("hs: "+w+" ");
+    	for(String q:hs.get(w))
+    	{
+        	System.out.println(q);
+
+    	} 
+      } 
+      */
+      for(String line2:TConcepts)
+      {
+    	  line2=line2.toLowerCase();
+    	  line2=line2.replaceAll("_", " ");
+		   //System.out.println("line2 "+line2);
+
+    	  	List<String> list1= new ArrayList<String>();
+    	  	list1=hs.get(line2);
+    	  	/*if(!hs.containsKey(line2))
+    	  		System.out.println("-1");
+    	  	else
+    	  	for(String w:list1)
+    		{
+        		System.out.println(w+"  ");
+
+    		} */
+    	  	if(hs.containsKey(line2))
+    	  	{
+    	  		for(String i:list1)
+    	  		{  // i=i.replaceAll("_", " ");
+    	  		   // line2=line2.replaceAll("_", " ");
+    	  		   // System.out.println(2+" "+line+" "+i);
+    	  		  //if(TConcepts.contains(i))
+    	  			if(isPlural(i))
+    	  			{	if(line2.equalsIgnoreCase(stem(i))||line2.equalsIgnoreCase(i))
+    	  				continue;
+    	  				writer.write(line2+",TYPE,"+i+"\n");
+    	  			//System.out.println("3 "+line+",TYPE,"+i+"\n");
+    	  			}
+    	  			
+    	  		}
+    	  	}
+      }
+     // if(w.length()==0) break;
+     // if(isPlural(w)) System.out.println("This word is plural");
+     // if(isSingular(w)) System.out.println("This word is singular");
+     //System.out.println("Stemmed to singular: "+stem(w));
+    br.close();
+    br1.close();
+    writer.close();
+      
+  }
+}
