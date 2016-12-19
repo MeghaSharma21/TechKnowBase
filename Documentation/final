@@ -1,0 +1,45 @@
+CONFIGURING PATTY:
+
+MODIFY "./src/mpi/patty/parameters/PattyConfigure.java":
+
+1) Change <USERNAME> to hduser on the hadoop cluster
+
+2) Set the path to the Wikipedia dump on the hadoop server:
+"public static final String WIKIPEDIA ="
+
+3) Set the address of the hadoop cluster:
+public static final String HADOOP_SERVER = "hdfs://localhost:8020/";
+
+4) Set the address of the server with mongodb database
+(optional to store results in the database):
+public static final String MONGODB_SERVER = "localhost";
+
+
+
+After installing hadoop and starting the nodes( with start-dfs.sh),
+
+1) create a directory on the hadoop server: "/user/hduser/patty/"
+
+2) Upload:
+hdfs dfs -put ./conf/interesting_yagoclasses /user/hduser/patty/
+hdfs dfs -put ./conf/commonnouns_meanstable.tsv /user/hduser/patty/
+upload wikipedia dump to "/user/hduser/"
+
+
+After loading yago into a database, modify settings in the file "./conf/yago.ini"
+
+
+COMPILING PATTY'S CODE
+1. Go to the directory where patty's code has been stored.
+2. Run the command:
+mvn package
+
+Note: One needs to set proxy in maven seperately. For that, make changes in /usr/share/maven/conf/settings.xml 
+
+
+
+EXECUTING PATTY'S CODE:
+1. Go to the directory where patty's code has been stored.
+2. run the command: 
+bash ./info/runPatty.sh ./target/patty-0.0.1-SNAPSHOT-jar-with-dependencies.jar ./lib/ ./conf/
+

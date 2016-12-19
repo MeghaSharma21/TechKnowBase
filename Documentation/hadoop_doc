@@ -1,0 +1,192 @@
+INSTALLING HADOOP
+
+Version: Hadoop 2.7.2 
+
+Prerequisites:
+1.Install JAVA ( compatible with hadoop's version)
+
+->commands:
+ $ sudo add-apt-repository ppa:webupd8team/java
+$ sudo apt-get update
+$ sudo apt-get install oracle-java8-installer
+$ sudo apt-get install oracle-java8-set-default
+
+To test the Java installation:
+$ java –version
+
+
+2. To install SSH
+
+$ sudo apt-get install openssh-server
+To test SSH installation : 
+$ ssh localhost
+
+To setup passphraseless ssh : 
+$ ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+$ cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
+
+
+Steps:
+
+1. Download and install Hadoop:
+
+Run this command to download Hadoop, in here I downloaded version 2.7.2 in to home directory
+$ sudo wget http://www.eu.apache.org/dist/hadoop/common/hadoop-2.7.2/hadoop-2.7.2.tar.gz -P /home/hduser
+Create a directory called bigdata and grand a full permission to this folder. I used this folder for all Hadoop related stuff.
+$ sudo mkdir bigdata
+Hadoop will create sub folders automatically, for that I gave full permission to the main directory.
+$ sudo chmod 777 bigdata
+Unzip downloaded Hadoop file into this bigdata
+$ sudo tar -xvf /home/uma/Downloads/hadoop-2.7.2.tar.gz -C /home/uma/bigdata/
+Create logs directory:
+$ sudo mkdir bigdata/hadoop-2.7.2/logs
+
+2. Disabling IPV6:
+Open /etc/sysctl.conf and add the following lines to the end of the file:
+# disable ipv6
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+
+Then, reboot the machine.
+To check whether IPv6 is enabled or not,
+$ cat /proc/sys/net/ipv6/conf/all/disable_ipv6
+A return value of 0 means IPv6 is enabled, a value of 1 means disabled (that’s what we want).
+
+3. Configuring .bashrc file
+ # to open .bashrc: $ sudo nano ~/.bashrc
+ # to restart .bashrc: $ . ~/.bashrc
+ Open .bashrc file and copy and paste the following commands.
+#hadoop variables start
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_60
+export HADOOP_HOME=/home/uma/bigdata/hadoop-2.7.2
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR="$HADOOP_HOME/lib/native"
+export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib"
+export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+#hadoop variables end
+
+
+
+4. Configuring hadoop files
+All files will be found in /home/hduser/bigdata/hadoop-2.7.2/etc directory.
+I configured :
+
+
+    hadoop-env.sh 
+    mapred-env.sh
+    core-site.xml
+    hdfs-site.xml
+    mapred-site.xml
+    yarn-site.xml
+
+
+a. hadoop-env.sh:
+ Open the file
+$ sudo nano hadoop-env.sh
+Place this java path at the bottom of the file
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_60
+
+b. mapred-env.sh 
+Open the file
+$ sudo nano mapred-env.sh
+Place this java path at the bottom of the file
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_60
+
+c.  core-site.xml
+Open the file
+$ sudo nano core-site.xml
+Place this code between <configuration> </configuration>
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://localhost:9000</value>
+</property>
+
+
+d. Hdfs-site.xml
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+  <description>Default block replication.
+  The actual number of replications can be specified when the file is created.
+  The default is used if replication is not specified in create time.
+  </description>
+</property>
+
+
+
+e.  mapred-site.xml 
+This file by default empty, so create file from template
+$ sudo cp mapred-site.xml.template mapred-site.xml
+Open file
+$ sudo nano mapred-site.xml
+Place this code between <configuration> </configuration>
+<property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+ </property>
+
+
+
+
+f.  yarn-site.xml 
+Open file
+$ sudo nano yarn-site.xml
+Place this code between <configuration> </configuration>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+
+
+5. Start HDFS and Yarn
+First format namenode to start Hadoop
+$ ./bin/hdfs namenode -format
+
+
+
+Start HDFS 
+$ ./sbin/start-dfs.sh
+If warning: "unable to load native-hadoop library for your platform...using builtin-java classes where applicable" appears, then
+append it in bashrc
+export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native" Check the processes in terminal.
+jps
+restart .bashrc try to connect again
+Once HDFS started, running jps command you can check the running process
+
+
+To start yarn
+$ start-yarn.sh
+
+6. Stop HDFS and Yarn
+Stop Yarn first then HDFS
+$ stop-yarn.sh
+$ stop-dfs.sh
+
+
+HADOOP COMMANDS:
+http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#dfs
+http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html#mkdir
+
+
+FREQUENLY OCCURRING ERRORS:
+1.If datanode doesn't start up:
+ Firstly check the log file. If the specified error is that the user doesn't have access to required directories, then execute the same command as root.
+If the error is that namespace IDs don't match, then:
+http://stackoverflow.com/questions/29166837/datanode-is-not-starting-in-singlenode-hadoop-2-6-0
+( If you ave created hadoop.tmp.dir)
+
+
+2. If the error:"Connection refused" occurs then usually the nodes have not been started properly, so stop all of them and then restart. If that is not the case, then:
+	http://wiki.apache.org/hadoop/ConnectionRefused
+	http://askubuntu.com/questions/352868/i-cant-connect-to-hadoop-port-9000
+
+3. If the error: NoSuchMethodFound occurs then find the jar file which should ideally contain that method and replace it with its latest version( after renaming it).
+
+
+ 
+
+

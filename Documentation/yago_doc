@@ -1,0 +1,35 @@
+LOADING YAGO INTO POSTGRES DATABASE
+
+1. Download database importer:
+   https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/archive/ and extract it.
+2. Open the script and change its encoding from UTF-8 to ASCII-text ( ie. ISO88591)
+
+3. Manually download the following files from https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/downloads/ :
+   yagoGeonamesGlosses.tsv
+   yagoSimpleTypes.tsv
+   yagoDBpediaClasses.tsv
+   yagoLabels.tsv
+   yagoSources.tsv
+   yagoDBpediaInstances.tsv
+   yagoLiteralFacts.tsv
+   yagoStatistics.tsv
+   yagoFacts.tsv
+   yagoMetaFacts.tsv
+   yagoTaxonomy.tsv
+   yagoGeonamesClassIds.tsv
+   yagoMultilingualClassLabels.tsv
+   yagoTransitiveType.tsv
+   yagoGeonamesClasses.tsv
+   yagoMultilingualInstanceLabels.tsv
+   yagoTypes.tsv
+   yagoGeonamesData.tsv
+   yagoSchema.tsv
+   yagoWikipediaInfo.tsv
+   yagoGeonamesEntityIds.tsv
+   yagoSimpleTaxonomy.tsv
+   yagoWordnetIds.tsv
+   yagoWordnetDomains.tsv
+  (Place all these files in /var/lib/postgresql/9.1 after extracting them )
+
+3. In a shell or dos box, cd into the directory /var/lib/postgresql/9.1
+4. Run "psql -a -d <database> -h <hostname> -U <user> -f <thisScript>" without quotes

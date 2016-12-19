@@ -1,0 +1,48 @@
+INSTALLING AND CONFIGURING POSTGRES DATABASE
+
+Version: postgres 9.1
+
+Steps:
+
+1. Update apt-get repository:
+apt-get update
+
+2. Download Postgres and its helpful accompanying dependencies:
+sudo apt-get install postgresql postgresql-contrib
+
+3. To create custom users, first switch into the default user:
+
+sudo su – postgres
+
+4. Create new user:
+createuser
+Or
+createuser --pwprompt (to set a password also)
+
+5. To enter  PostgreSQL interactive terminal:
+
+psql -U hduser
+
+6. To create database:
+ create database hduser
+(create <database name>)
+
+7. To connect to the database:
+> \connect hduser
+
+(\connect <database name>)
+
+8. To change password:
+
+> \password
+
+9. To quit psql:
+> \q
+
+
+References:
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-12-04
+
+http://www.tutorialspoint.com/postgresql/postgresql_create_database.htm
+

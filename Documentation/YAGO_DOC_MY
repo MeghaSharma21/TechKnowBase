@@ -1,0 +1,20 @@
+LOADING YAGO INTO POSTGRES DATABASE
+
+1. Download YAGO 2.3.0_core and extract it:
+https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/archive/
+2. Download converters (and extract it) to load YAGO2 into a Postgres database:
+http://resources.mpi-inf.mpg.de/yago-naga/yago1_yago2/download/yago2/yago2converters_20111027.7z
+3. Download the JDBC file from:
+     http://jdbc.postgresql.org/
+Copy the jar file with the JDBC driver to the lib/ directory of yago converters, and it will be added to the classpath when running
+the shell/batch script automatically.
+
+4. Configure yago.ini
+
+5.Start the YAGO2 converters by typing    
+ ./yago2converters.sh
+
+6. To query in native YAGO query format (including meta facts), run ./yago2query.sh after loading YAGO into a database.
+
+7. To query in SQL after loading YAGO into a database as explained above, one can access all facts in YAGO, including the meta facts, through standard SQL queries.
+       

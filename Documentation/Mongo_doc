@@ -1,0 +1,72 @@
+INSTALLING AND CONFIGURING MONGODB
+
+1. Import the MongoDB public GPG Key −
+
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+
+2. Create a /etc/apt/sources.list.d/mongodb.list file using the following command.
+
+echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' 
+   | sudo tee /etc/apt/sources.list.d/mongodb.list
+
+3. Update the repository −
+
+sudo apt-get update
+
+4. Install the MongoDB (Install latest version)−
+
+apt-get install mongodb-10gen
+
+5. Start MongoDB
+
+sudo service mongodb start
+
+6. Check mongodb service has started-
+
+ps -ef | grep mongodb
+
+6. Stop MongoDB
+
+sudo service mongodb stop
+
+7. Restart MongoDB
+
+sudo service mongodb restart
+
+8. To use mongodb :
+
+mongo
+
+This will connect to running mongod instance.
+
+9. To create a database:
+
+use mongo_patty
+
+10. To check currently selected database:
+ db
+
+11. To check the databases list:
+show dbs.
+
+12. To get the hostname of the system running the mongo shell process-
+getHostName()
+
+LOCATIONS:
+
+1. All MongoDB executable files are stored at /usr/bin/
+
+2. The “mongodb control script” is generated at /etc/init.d/mongodb
+
+3. The MongoDB config file is at /etc/mongodb.conf
+
+
+FREQUENTLY OCCURRING ERRORS:
+1. GPG error: http://downloads-distro.mongodb.org dist Release: 
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 9ECBEC467F0CEB10
+-->Import GPG keys
+
+
+2. Mongo: couldn't connect to server 127.0.0.1:27017 at src/mongo/shell/mongo.js:145
+
+-->http://stackoverflow.com/questions/19527564/mongo-couldnt-connect-to-server-127-0-0-127017-at-src-mongo-shell-mongo-js14
